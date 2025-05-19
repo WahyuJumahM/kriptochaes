@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KriptoChAES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white font-sans">
+
+    <!-- Navbar -->
+    <nav class="flex items-center justify-between p-6 bg-black">
+        <h1 class="text-2xl font-bold">Kripto<span class="text-blue-500">ChAES</span></h1>
+        <div class="space-x-6">
+            <a href="/" class="hover:text-blue-400">HOME</a>
+            <a href="/encrypt" class="hover:text-blue-400">ENCRYPT</a>
+            <a href="/decrypt" class="hover:text-blue-400">DECRYPT</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="flex flex-col md:flex-row items-center justify-between p-10 bg-gradient-to-br from-blue-900 to-blue-500">
+        <div class="max-w-xl mb-10 md:mb-0">
+            <h2 class="text-4xl md:text-5xl font-bold leading-tight">Welcome To<br>Our Website</h2>
+            <p class="mt-6 text-gray-200">Website ini adalah untuk enkripsi teks menjadi papan catur menggunakan tambahan Algoritma AES dan XOR (AES-CBC)</p>
+            <a href="/encrypt" class="mt-6 inline-block bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-300 transition">Mulai sekarang</a>
+            <p class="mt-8 text-sm">Kelompok 2 Kriptografi</p>
+        </div>
+        <div>
+            <img src="{{ url_for('static', filename='images/chess.png') }}" alt="Chess Image" class="rounded-2xl w-96 shadow-lg">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 bg-black text-gray-500 mt-10">
+        &copy; 2025 KriptoChAES
+    </footer>
+
+</body>
+</html>

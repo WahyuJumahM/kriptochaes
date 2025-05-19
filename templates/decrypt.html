@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Decrypt | KriptoChAES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="bg-black text-white font-sans">
+
+    <!-- Navbar -->
+    <nav class="flex items-center justify-between p-6 bg-black">
+        <h1 class="text-2xl font-bold">Kripto<span class="text-blue-500">ChAES</span></h1>
+        <div class="space-x-6">
+            <a href="/" class="hover:text-blue-400">HOME</a>
+            <a href="/encrypt" class="hover:text-blue-400">ENCRYPT</a>
+            <a href="/decrypt" class="text-blue-400 font-semibold">DECRYPT</a>
+        </div>
+    </nav>
+
+    <!-- Decrypt Section -->
+    <div class="flex flex-col md:flex-row items-center justify-between p-10 bg-gradient-to-br from-blue-900 to-blue-500">
+        <div class="max-w-xl mb-10 md:mb-0">
+            <h2 class="text-4xl font-bold">Decrypt</h2>
+            <p class="mt-4 text-gray-200">Dekripsikan pesan yang telah dienkripsi</p>
+
+            <form id="decryptForm" class="mt-6 space-y-4" onsubmit="return false;">
+                <input type="file" id="fileInput" accept=".pgn" class="block w-full text-sm text-gray-300
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-500 file:text-white
+                    hover:file:bg-blue-600" />
+                <button id="decryptButton" class="bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-300 transition mt-2">Dekripsikan</button>
+            </form>
+
+            <div id="resultContainer" class="mt-6 hidden">
+                <p>Hasil Decrypt :</p>
+                <pre id="hasilDecrypt" class="text-yellow-300 whitespace-pre-wrap"></pre>
+            </div>
+
+            <p class="mt-8 text-sm">Kelompok 2 Kriptografi</p>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/chessboard.webp') }}" alt="Decrypt Image" class="rounded-2xl w-96 shadow-lg" />
+        </div>
+    </div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const decryptButton = document.getElementById('decryptButton');
+    const resultContainer = document.getElementById('resultContainer');
+    const hasilDecrypt = document.getElementById('hasilDecrypt');
+
+    function xorBuffers(buf1, buf2) {
+        let length = Math.min(buf1.length, buf2.length);
+        let result = new Uint8Array(length);
+        for (let i = 0; i < length; i++) {
+            result[i] = buf1[i] ^ buf2[i];
+        }
+        return result;
+    }
+
+    function uint8ArrayToWordArray(u8Array) {
+        const words = [];
+        for (let i = 0; i < u8Array.length; i += 4) {
+            words.push(
+                ((u8Array[i] << 24) |
+                (u8Array[i + 1] << 16) |
+                (u8Array[i + 2] << 8) |
+                (u8Array[i + 3] || 0)) >>> 0
+            );
+        }
+        return CryptoJS.lib.WordArray.create(words, u8Array.length);
+    }
+
+    decryptButton.addEventListener('click', () => {
+        if (!fileInput.files.length) {
+            alert("Silakan pilih file hasil enkripsi (.pgn) terlebih dahulu!");
+            return;
+        }
+
+        const key = "SuperSecretKey!";
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const arrayBuffer = e.target.result;
+            const encryptedBytes = new Uint8Array(arrayBuffer);
+
+            let keyBytes = new TextEncoder().encode(key);
+
+            // Extend keyBytes biar sepanjang encryptedBytes
+            let fullKeyBytes = new Uint8Array(encryptedBytes.length);
+            for (let i = 0; i < encryptedBytes.length; i++) {
+                fullKeyBytes[i] = keyBytes[i % keyBytes.length];
+            }
+
+            // XOR dulu ke ciphertext AES
+            const xored = xorBuffers(encryptedBytes, fullKeyBytes);
+
+            // Convert ke WordArray
+            const cipherWordArray = uint8ArrayToWordArray(xored);
+
+            try {
+                const decrypted = CryptoJS.AES.decrypt(
+                    { ciphertext: cipherWordArray },
+                    key
+                );
+
+                const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+
+                if (!decryptedText) {
+                    alert("Gagal mendekripsi. File mungkin bukan hasil enkripsi yang valid.");
+                    resultContainer.classList.add('hidden');
+                    return;
+                }
+
+                hasilDecrypt.textContent = decryptedText;
+                resultContainer.classList.remove('hidden');
+            } catch (err) {
+                alert("Terjadi kesalahan saat mendekripsi file.");
+                resultContainer.classList.add('hidden');
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
+</script>
+
+</body>
+</html>

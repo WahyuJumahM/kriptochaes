@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Encrypt | KriptoChAES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- CryptoJS untuk AES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="bg-black text-white font-sans">
+
+    <!-- Navbar -->
+    <nav class="flex items-center justify-between p-6 bg-black">
+        <h1 class="text-2xl font-bold">Kripto<span class="text-blue-500">ChAES</span></h1>
+        <div class="space-x-6">
+            <a href="/" class="hover:text-blue-400">HOME</a>
+            <a href="/encrypt" class="{% if request.path == '/encrypt' %}text-blue-400 font-semibold{% else %}hover:text-blue-400{% endif %}">ENCRYPT</a>
+            <a href="/decrypt" class="hover:text-blue-400">DECRYPT</a>
+        </div>
+    </nav>
+
+    <!-- Encrypt Section -->
+    <div class="flex flex-col md:flex-row items-center justify-between p-10 bg-gradient-to-br from-blue-900 to-blue-500">
+        <div class="max-w-xl mb-10 md:mb-0">
+            <h2 class="text-4xl font-bold">Encrypt</h2>
+            <p class="mt-4 text-gray-200">Enkripsikan pesanmu sekarang</p>
+
+            <form id="encryptForm" class="mt-6 space-y-4">
+                <div id="textareaWrapper">
+                    <textarea id="plaintext" name="plaintext" rows="5" placeholder="Tulis pesan di sini..." class="w-full p-4 rounded-lg text-black">{{ pesan or '' }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-white">Atau upload file pesan (.txt)</label>
+                    <input type="file" id="fileInput" accept=".txt" class="block w-full text-sm text-gray-300
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-blue-500 file:text-white
+                        hover:file:bg-blue-600"/>
+                </div>
+
+                <button type="submit" id="encryptButton" class="bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-300 transition">Enkripsi</button>
+            </form>
+
+            <!-- Container untuk tombol download hasil -->
+            <div id="resultContainer" class="mt-6 hidden">
+                <a href="#" id="downloadLink" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-full cursor-pointer">Klik di sini untuk download hasil</a>
+            </div>
+
+            <p class="mt-8 text-sm">Kelompok 2 Kriptografi</p>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/chessboard.webp') }}" alt="Encrypt Image" class="rounded-2xl w-96 shadow-lg" />
+        </div>
+    </div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const textareaWrapper = document.getElementById('textareaWrapper');
+    const plaintextInput = document.getElementById('plaintext');
+    const encryptForm = document.getElementById('encryptForm');
+
+    const resultContainer = document.getElementById('resultContainer');
+    const downloadLink = document.getElementById('downloadLink');
+
+    fileInput.addEventListener('change', function () {
+        if (this.files.length > 0) {
+            textareaWrapper.style.display = 'none';
+        } else {
+            textareaWrapper.style.display = 'block';
+        }
+        resultContainer.classList.add('hidden');
+        downloadLink.href = '#';
+        downloadLink.removeAttribute('download');
+    });
+
+    function xorBuffers(buf1, buf2) {
+        let result = new Uint8Array(buf1.length);
+        for (let i = 0; i < buf1.length; i++) {
+            result[i] = buf1[i] ^ buf2[i % buf2.length];
+        }
+        return result;
+    }
+
+    function wordArrayToUint8Array(wordArray) {
+        const len = wordArray.sigBytes;
+        const u8_array = new Uint8Array(len);
+        let offset = 0;
+        for (let i = 0; i < wordArray.words.length; i++) {
+            let word = wordArray.words[i];
+            for (let j = 3; j >= 0 && offset < len; j--) {
+                u8_array[offset++] = (word >> (j * 8)) & 0xff;
+            }
+        }
+        return u8_array;
+    }
+
+    encryptForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const key = "SuperSecretKey!";
+        const keyBytes = new TextEncoder().encode(key);
+
+        function encrypt(plaintext) {
+            const encrypted = CryptoJS.AES.encrypt(plaintext, key);
+            const aesBytes = wordArrayToUint8Array(encrypted.ciphertext);
+            const xored = xorBuffers(aesBytes, keyBytes);
+            return xored;
+        }
+
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                const text = evt.target.result;
+                const encryptedData = encrypt(text);
+                const blob = new Blob([encryptedData], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                downloadLink.download = "encrypted.pgn";
+                resultContainer.classList.remove('hidden');
+            };
+            reader.readAsText(file);
+        } else {
+            const text = plaintextInput.value.trim();
+            if (text.length === 0) {
+                alert("Isi pesan atau upload file terlebih dahulu!");
+                return;
+            }
+            const encryptedData = encrypt(text);
+            const blob = new Blob([encryptedData], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            downloadLink.href = url;
+            downloadLink.download = "encrypted.pgn";
+            resultContainer.classList.remove('hidden');
+        }
+    });
+</script>
+
+
+</body>
+</html>
