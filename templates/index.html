@@ -3,37 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KriptoChAES</title>
+    <title>KriptoChAES - Text to Chess Encryption</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Oxanium', sans-serif;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .chess-pattern {
+            background-image: 
+                linear-gradient(45deg, rgba(30, 58, 138, 0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(30, 58, 138, 0.1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(30, 58, 138, 0.1) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(30, 58, 138, 0.1) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
 </head>
 <body class="bg-black text-white font-sans">
 
     <!-- Navbar -->
-    <nav class="flex items-center justify-between p-6 bg-black">
-        <h1 class="text-2xl font-bold">Kripto<span class="text-blue-500">ChAES</span></h1>
-        <div class="space-x-6">
-            <a href="/" class="hover:text-blue-400">HOME</a>
-            <a href="/encrypt" class="hover:text-blue-400">ENCRYPT</a>
-            <a href="/decrypt" class="hover:text-blue-400">DECRYPT</a>
+    <nav class="flex items-center justify-between p-6 bg-black border-b border-blue-900 sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-chess-knight text-blue-500 text-2xl"></i>
+            <h1 class="text-3xl font-bold">Kripto<span class="text-blue-500">ChAES</span></h1>
+        </div>
+        <div class="space-x-8 flex items-center">
+            <a href="/" class="nav-link font-medium hover:text-blue-400 transition-colors">HOME</a>
+            <a href="/encrypt" class="nav-link font-medium hover:text-blue-400 transition-colors">ENCRYPT</a>
+            <a href="/decrypt" class="nav-link font-medium hover:text-blue-400 transition-colors">DECRYPT</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <div class="flex flex-col md:flex-row items-center justify-between p-10 bg-gradient-to-br from-blue-900 to-blue-500">
-        <div class="max-w-xl mb-10 md:mb-0">
-            <h2 class="text-4xl md:text-5xl font-bold leading-tight">Welcome To<br>Our Website</h2>
-            <p class="mt-6 text-gray-200">Website ini adalah untuk enkripsi teks menjadi papan catur menggunakan tambahan Algoritma AES dan XOR (AES-CBC)</p>
-            <a href="/encrypt" class="mt-6 inline-block bg-white text-black font-semibold px-6 py-3 rounded-full hover:bg-gray-300 transition">Mulai sekarang</a>
-            <p class="mt-8 text-sm">Kelompok 2 Kriptografi</p>
+    <div class="flex flex-col md:flex-row items-center justify-between p-10 md:p-16 bg-gradient-to-br from-black via-blue-900 to-black min-h-[80vh] chess-pattern">
+        <div class="max-w-xl mb-10 md:mb-0 z-10">
+            <div class="inline-block bg-blue-500 px-3 py-1 rounded-full text-sm font-medium mb-4">
+                AES-CBC + Chess Visualization
+            </div>
+            <h2 class="text-5xl md:text-6xl font-bold leading-tight">Secure Text to <span class="text-blue-400">Chess</span> Encryption</h2>
+            <p class="mt-6 text-gray-300 text-lg">Website ini adalah untuk enkripsi teks menjadi papan catur menggunakan tambahan Algoritma AES dan XOR (AES-CBC) untuk keamanan yang maksimal.</p>
+            <div class="mt-8 flex space-x-4">
+                <a href="/encrypt" class="bg-white text-black font-semibold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors flex items-center">
+                    <i class="fas fa-lock mr-2"></i> Mulai Enkripsi
+                </a>
+                <a href="/decrypt" class="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white/10 transition-colors flex items-center">
+                    <i class="fas fa-unlock mr-2"></i> Dekripsi
+                </a>
+            </div>
+            <div class="mt-12 flex items-center">
+                <p class="text-gray-400 font-medium">Kelompok 2 Kriptografi</p>
+                <div class="w-12 h-px bg-gray-700 mx-4"></div>
+                <div class="flex -space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center">R</div>
+                    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">R</div>
+                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">W</div>
+                    <div class="w-8 h-8 rounded-full bg-blue-400 flex items-center justify-center">F</div>
+                </div>
+            </div>
         </div>
-        <div>
-            <img src="{{ url_for('static', filename='images/chess.png') }}" alt="Chess Image" class="rounded-2xl w-96 shadow-lg">
+        <div class="relative">
+            <div class="absolute inset-0 bg-blue-500 blur-3xl opacity-20 rounded-full"></div>
+            <div class="animate-float relative">
+                <div class="grid grid-cols-4 grid-rows-4 bg-white p-1 rounded-xl shadow-2xl">
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900 flex items-center justify-center">
+                        <i class="fas fa-chess-knight text-white text-3xl"></i>
+                    </div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900 flex items-center justify-center">
+                        <i class="fas fa-chess-pawn text-white text-3xl"></i>
+                    </div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900 flex items-center justify-center">
+                        <i class="fas fa-chess-rook text-white text-3xl"></i>
+                    </div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900"></div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-800 flex items-center justify-center">
+                        <i class="fas fa-chess-queen text-white text-3xl"></i>
+                    </div>
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-900"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-16 px-8 md:px-16">
+        <h3 class="text-center text-3xl font-bold mb-16">Fitur Unggulan</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-blue-900/20 p-6 rounded-xl border border-blue-800 hover:border-blue-500 transition-colors">
+                <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-2">Keamanan AES</h4>
+                <p class="text-gray-400">Enkripsi menggunakan Advanced Encryption Standard (AES) dengan mode CBC untuk keamanan maksimal.</p>
+            </div>
+            <div class="bg-blue-900/20 p-6 rounded-xl border border-blue-800 hover:border-blue-500 transition-colors">
+                <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-chess-board text-white text-xl"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-2">Visualisasi Papan Catur</h4>
+                <p class="text-gray-400">Hasil enkripsi divisualisasikan dalam bentuk papan catur yang unik dan estetik.</p>
+            </div>
+            <div class="bg-blue-900/20 p-6 rounded-xl border border-blue-800 hover:border-blue-500 transition-colors">
+                <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-exchange-alt text-white text-xl"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-2">Enkripsi & Dekripsi</h4>
+                <p class="text-gray-400">Mudah mengenkripsi teks menjadi papan catur dan mendekripsi kembali menjadi teks asli.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="py-16 px-8 md:px-16 bg-blue-900/10">
+        <h3 class="text-center text-3xl font-bold mb-16">Cara Kerja</h3>
+        <div class="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-6">
+            <div class="bg-blue-950 p-6 rounded-xl text-center w-full md:w-64">
+                <div class="w-16 h-16 mx-auto bg-blue-800 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-2xl font-bold">1</span>
+                </div>
+                <h4 class="font-bold mb-2">Input Teks</h4>
+                <p class="text-gray-400 text-sm">Masukkan teks yang ingin dienkripsi</p>
+            </div>
+            <div class="text-blue-500 text-4xl">→</div>
+            <div class="bg-blue-950 p-6 rounded-xl text-center w-full md:w-64">
+                <div class="w-16 h-16 mx-auto bg-blue-800 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-2xl font-bold">2</span>
+                </div>
+                <h4 class="font-bold mb-2">Enkripsi AES</h4>
+                <p class="text-gray-400 text-sm">Enkripsi menggunakan algoritma AES-CBC</p>
+            </div>
+            <div class="text-blue-500 text-4xl">→</div>
+            <div class="bg-blue-950 p-6 rounded-xl text-center w-full md:w-64">
+                <div class="w-16 h-16 mx-auto bg-blue-800 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-2xl font-bold">3</span>
+                </div>
+                <h4 class="font-bold mb-2">Visualisasi Catur</h4>
+                <p class="text-gray-400 text-sm">Hasil enkripsi divisualisasikan sebagai papan catur</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call To Action -->
+    <div class="py-20 px-8 text-center bg-gradient-to-r from-blue-900 to-black">
+        <h3 class="text-3xl md:text-4xl font-bold mb-6">Siap Untuk Mencoba?</h3>
+        <p class="text-gray-300 max-w-lg mx-auto mb-8">Enkripsi pesan Anda sekarang dan nikmati keamanan dengan visualisasi papan catur yang unik.</p>
+        <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
+            <a href="/encrypt" class="bg-white text-black font-semibold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors">
+                Mulai Enkripsi
+            </a>
+            <a href="/learning" class="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white/10 transition-colors">
+                Pelajari Lebih Lanjut
+            </a>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="text-center p-4 bg-black text-gray-500 mt-10">
-        &copy; 2025 KriptoChAES
+    <footer class="bg-black text-gray-500 py-12 px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="flex items-center space-x-2 mb-6 md:mb-0">
+                    <i class="fas fa-chess-knight text-blue-500 text-2xl"></i>
+                    <h1 class="text-2xl font-bold text-white">Kripto<span class="text-blue-500">ChAES</span></h1>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2025 KriptoChAES - Kelompok 2 Kriptografi</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-gray-300 transition-colors text-sm">Contact</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
 </body>
